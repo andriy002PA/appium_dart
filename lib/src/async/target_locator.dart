@@ -22,17 +22,16 @@ class TargetLocator {
   ///   not provided: selects the first frame on the page or the main document.
   ///
   ///   Throws [NoSuchFrameException] if the specified frame can't be found.
-  Future<void> frame([/* int | WebElement | String */ frame]) async {
+  Future<void> frame(/* int | WebElement | String */ frame) async {
     if (frame == null || frame is int) {
-      await _client.send(_handler.frame.buildSwitchByIdRequest(frame),
-          _handler.frame.parseSwitchByIdResponse);
+      await _client.send(_handler.frame.buildSwitchByIdRequest(frame), _handler.frame.parseSwitchByIdResponse);
     } else if (frame is AppiumWebDriver) {
-      await _client.send(_handler.frame.buildSwitchByElementRequest(frame.id),
-          _handler.frame.parseSwitchByElementResponse);
+      await _client.send(
+          _handler.frame.buildSwitchByElementRequest(frame.id), _handler.frame.parseSwitchByElementResponse);
     } else if (frame is String) {
-      final frameId = (await _driver.findElement(AppiumBy.id(frame))).id;
-      await _client.send(_handler.frame.buildSwitchByElementRequest(frameId),
-          _handler.frame.parseSwitchByElementResponse);
+      final frameId = (await _driver.findElement(AppiumBy.cssSelector(frame))).id;
+      await _client.send(
+          _handler.frame.buildSwitchByElementRequest(frameId), _handler.frame.parseSwitchByElementResponse);
     } else {
       throw 'Unsupported frame "$frame" with type ${frame.runtimeType}';
     }
