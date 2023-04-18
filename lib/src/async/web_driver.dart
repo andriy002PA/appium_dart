@@ -138,6 +138,19 @@ class AppiumWebDriver implements AppiumSearchContext {
     }
   }
 
+  /// List all of the currently displayed tabs/windows.
+  Future<List<Window>> get getAvailableWindows async {
+    final List<Window> listWindows = [];
+    final windows = await _client.send(
+        _handler.window.buildGetWindowsRequest(),
+        (response) =>
+            _handler.window.parseGetWindowsResponse(response).map<Window>((w) => Window(_client, _handler, w)));
+    for (final window in windows) {
+      listWindows.add(window);
+    }
+    return listWindows;
+  }
+
   /// Handle for the active tab/window.
   Future<Window> get window => _client.send(
       _handler.window.buildGetActiveWindowRequest(),
